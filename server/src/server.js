@@ -7,7 +7,7 @@ dotenv.config();
 import express from 'express'
 import cors from 'cors'
 import connectDb from './config/db.js';
-import rateLimiter from './middlewares/rateLimiter.js'
+import {rateLimiter} from './middlewares/rateLimiter.js'
 import authRoutes from './routes/authRoutes.js'
 import router from './routes/tasksRoutes.js';
 
