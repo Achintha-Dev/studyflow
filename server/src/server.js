@@ -20,7 +20,7 @@ app.use(express.json()); // allow to read json data.
 app.use(rateLimiter);
 
 app.use('/api/auth', authRoutes);
-app.use('/api/auth', router);
+app.use('/api/tasks', router);
 
 connectDb().then(() => {
     app.listen(PORT, ()=>{
