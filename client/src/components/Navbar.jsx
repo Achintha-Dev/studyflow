@@ -6,7 +6,7 @@ function Navbar(props) {
     <div>
         <div className="navbar bg-blue-600 text-white">
             <div className="flex-1 bg-blue-600">
-                <a className="btn btn-ghost text-xl">daisyUI</a>
+                <a className="btn btn-ghost text-xl">StudyFlow</a>
             </div>
             <div className="flex-none ">
                 <ul className="menu menu-horizontal px-1">
