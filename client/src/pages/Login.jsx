@@ -45,6 +45,7 @@ function Login() {
                 <span className="label-text font-semibold">Email Address</span>
               </label>
               <input 
+                id ="email"
                 type="email" 
                 placeholder="email@example.com" 
                 className="input input-bordered focus:input-primary w-full" 
@@ -61,6 +62,7 @@ function Login() {
                 <a href="#" className="label-text-alt link link-hover text-blue-600">Forgot password?</a>
               </label>
               <input 
+                id="password"
                 type="password" 
                 placeholder="••••••••" 
                 className="input input-bordered focus:input-primary w-full" 
@@ -72,7 +74,7 @@ function Login() {
 
             {/* Submit Button */}
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary text-white text-lg">
+              <button id="submit" type="submit" className="btn btn-primary text-white text-lg">
                 Login
               </button>
             </div>
