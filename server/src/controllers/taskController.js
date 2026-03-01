@@ -42,7 +42,7 @@ export async function createTask(req, res) {
         const saveTask = await newTask.save();
         return res.status(201).json({
             message: 'Task Created Successfully',
-            task: { id: newTask._id, title: newTask.title, description: newTask.description,}
+            task: { id: saveTask._id, title: saveTask.title, description: saveTask.description,}
         });
 
     } catch (error) {
