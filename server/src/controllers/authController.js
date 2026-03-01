@@ -22,7 +22,7 @@ export async function registerUser(req, res) {
     }
 }
 
-export async function loginUser(rea, res) {
+export async function loginUser(req, res) {
     try {
         const {email, password} = req.body;
         // find user from email
