@@ -82,10 +82,9 @@ function Login() {
       </div>
 
       {/* --- RIGHT SIDE: THE ILLUSTRATION (Hidden on Mobile) --- */}
-      {/* 4. Added 'hidden lg:flex' to ensure this only shows on desktops */}
       <div className="hidden lg:flex flex-1 bg-blue-50 items-center justify-center p-12">
         <div className="max-w-xl text-center">
-          {/* Placeholder for your illustration similar to image_737484.png */}
+          {/* Placeholder for your illustration image_737484.png */}
           <img 
               src="https://img.freepik.com/free-vector/growth-concept-illustration_114360-5235.jpg" 
               alt="StudyFlow Growth" 
