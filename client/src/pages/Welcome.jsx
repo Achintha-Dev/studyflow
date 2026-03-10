@@ -2,18 +2,19 @@ import React from 'react'
 import welcomeImage from '../assets/undraw_writing-online_x665.svg'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
+import Footer from '../components/Footer'
 
 function Welcome() {
   return (
     <div>
-        <div className="bg-white min-h-screen">
+        <div className="bg-white min-h-screen flex flex-col">
             <Navbar>
                 <li><Link to='/login' className="text-gray-600 hover:text-blue-600 font-medium">Login</Link></li>
                 <li><Link to='/register' className="text-gray-600 hover:text-blue-600 font-medium">Register</Link></li>
             </Navbar>
 
             {/* Main Hero: Responsive flex direction and clean whitespace */}
-            <div className="flex flex-col lg:flex-row items-center justify-between px-6 py-10 md:py-20 lg:px-24">
+            <div className="flex-grow flex flex-col lg:flex-row items-center justify-between px-6 py-10 md:py-20 lg:px-24 max-w-7xl mx-auto w-full">
 
             {/* Text Section: Centered on mobile, left-aligned on desktop */}
             <div className="w-full lg:w-1/2 text-center lg:text-left z-10">
@@ -53,8 +54,12 @@ function Welcome() {
                 />
                 </div>
             </div>
+
           </div>
         </div>
+
+        <Footer/>
+
     </div>
   )
 }
