@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import EyeIcon from '../assets/eye_icon.svg'
 import EyeOffIcon from '../assets/eye-off_icon.svg'
+import image from '../assets/data_security.svg'
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -118,7 +119,7 @@ function Login() {
         <div className="max-w-xl text-center">
 
           <img 
-              src="https://img.freepik.com/free-vector/growth-concept-illustration_114360-5235.jpg" 
+              src={image} 
               alt="StudyFlow Growth" 
               className="w-full h-auto mb-8 mix-blend-multiply"
           />
