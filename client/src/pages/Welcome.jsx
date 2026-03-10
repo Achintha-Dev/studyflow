@@ -1,5 +1,5 @@
 import React from 'react'
-import welcomeImage from '../assets/undraw_waiting-for-you_xhp2.svg'
+import welcomeImage from '../assets/undraw_writing-online_x665.svg'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
 
@@ -42,7 +42,7 @@ function Welcome() {
             </div>
 
             {/* Image Section: Hidden or scaled based on screen size */}
-            <div className="w-full lg:w-1/2 mt-16 lg:mt-0 flex justify-center lg:justify-end">
+            <div className=" w-full lg:w-1/2 mt-16 lg:mt-0 flex justify-center lg:justify-end">
                 <div className="relative">
                 {/* Subtle background glow for depth in Light UI */}
                 <div className="absolute -inset-4 bg-blue-50 rounded-full blur-3xl opacity-70"></div>
