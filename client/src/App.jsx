@@ -2,6 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Welcome from "./pages/Welcome"
 import Login from "./pages/Login"
 import Tasks from "./pages/Tasks"
+import TaskDetails from "./pages/TaskDetails"
+import AddTask from "./pages/AddTask";
+import EditTask from "./pages/EditTask";
 import { Toaster } from 'react-hot-toast';
 import Register from "./pages/Register";
 import ProtectRoutes from "./components/ProtectRoutes";
@@ -20,6 +23,9 @@ function App() {
 
           <Route element={<ProtectRoutes/>}>
             <Route path="/tasks" element={<Tasks/>}/>
+            <Route path="/tasks/:id" element={<TaskDetails/>}/>
+            <Route path="/tasks/new" element={<AddTask />} />
+            <Route path="/tasks/edit/:id" element={<EditTask />} />
           </Route>
 
           <Route path="/register" element={<Register/>} />

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate  } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios';
 
@@ -18,6 +18,16 @@ function Tasks() {
   const [loading, setLoading] = useState(true);
   const name = JSON.parse(localStorage.getItem('userInfo'))?.user?.name || user?.name || 'User';
   const firstLetter = name.charAt(0).toUpperCase();
+  const navigate = useNavigate();
+
+  const handleCardClick = (e, id) => {
+  // Prevent navigation if dropdown or checkbox is clicked
+  if (e.target.closest('.dropdown') || e.target.type === 'checkbox') {
+    return;
+  }
+
+  navigate(`/tasks/${id}`);
+  };
 
   useEffect(() => {
     const fetchTask = async ()=> {
@@ -79,7 +89,7 @@ function Tasks() {
                 <p className="text-slate-500 mt-1">You have {tasks.length} tasks for today.</p>
             </div>
             {/* create task button */}
-            <button className="btn bg-[#2563eb] hover:bg-blue-700 text-white border-none rounded-xl px-6 shadow-lg shadow-blue-100">
+            <button className="btn bg-[#2563eb] hover:bg-blue-700 text-white border-none rounded-xl px-6 shadow-lg shadow-blue-100" onClick={() => navigate("/tasks/new")}>
                 + New Task
             </button>
         </div>
@@ -91,7 +101,7 @@ function Tasks() {
         ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
                 {tasks.map((task) => (
-                    <div key={task._id} className="bg-blue-100 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
+                    <div key={task._id} className="bg-blue-100 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={(e) => handleCardClick(e, task._id)}>
                         <div className="flex justify-between items-start mb-4">
 
                             <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -104,7 +114,7 @@ function Tasks() {
                             <div className="dropdown dropdown-end">
                               <div tabIndex={0} role="button" className="btn btn-ghost btn-sm text-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors m-1"> <HiOutlineDotsHorizontal /> </div>
                               <ul tabIndex={0} className="dropdown-content menu bg-blue-50 rounded-xl z-[1] w-16 p-1.5 shadow-xl border border-slate-100 pt-2">
-                                <li className='tooltip tooltip-right' data-tip="Edit"><Link> <FiEdit3 className='text-green-500 text-lg ' /> </Link></li>
+                                <li className='tooltip tooltip-right' data-tip="Edit"><Link to={`/tasks/edit/${task._id}`} > <FiEdit3 className='text-green-500 text-lg ' /> </Link></li>
                                 <li className='tooltip tooltip-right' data-tip="Delete"><Link> <MdDeleteOutline className='text-red-500 text-lg ' /> </Link></li>
                               </ul>
                             </div>
