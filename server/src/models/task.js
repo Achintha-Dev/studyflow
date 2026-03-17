@@ -17,7 +17,10 @@ const taskSchema = new mongoose.Schema({
         type: String,
         enum: ['Low', 'Medium', 'High'],
         default: 'Medium',
-        set: (v) => v.charAt(0).toUpperCase() + v.slice(1).toLowerCase() // fro case sensitivity when get input from user
+        set: (val) => {
+            if (!val) return val;
+            return val.charAt(0).toUpperCase() + val.slice(1); 
+        } // fro case sensitivity when get input from user
     },
     dueDate: { type: Date},
     isComplete: { type: Boolean, default: false }

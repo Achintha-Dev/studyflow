@@ -22,7 +22,7 @@ function Tasks() {
 
   const handleCardClick = (e, id) => {
   // Prevent navigation if dropdown or checkbox is clicked
-  if (e.target.closest('.dropdown') || e.target.type === 'checkbox') {
+  if (e.target.closest('.dropdown, .no-nav') || e.target.type === 'checkbox') {
     return;
   }
 
@@ -37,8 +37,6 @@ function Tasks() {
             headers: { Authorization: `Bearer ${token}` }
         });
         setTasks(res.data);
-
-        toast.success('Welcome back!');
         setLoading(false);
 
       } catch (error) {
@@ -50,6 +48,37 @@ function Tasks() {
     };
     fetchTask();
   }, []);
+
+  // check/uncheck task
+  const handleToggleComplete = async (e, id) => {
+    e.stopPropagation(); // Prevent card click
+    try {
+      const token = JSON.parse(localStorage.getItem('userInfo')).token;
+
+      const task = tasks.find(t => t._id === id);
+
+      const res = await axios.put(`http://localhost:5000/api/tasks/${id}`, 
+        { isComplete: !task.isComplete },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      toast.success('Task updated!');
+
+      // update UI instantly
+      setTasks((prev) =>
+        prev.map((t) =>
+          t._id === id
+            ? { ...t, isComplete: res.data.task.isComplete }
+            : t
+        )
+      );
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update task!');
+      console.log(error.response?.data?.message || 'Failed to update task!');
+      
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -127,7 +156,7 @@ function Tasks() {
                           {task.description.split(" ").length > 5 ? "..." : ""}
                         </p>
 
-                        <div className="mt-6 pt-4 border-t border-slate-50 flex justify-between items-center">
+                        <div className="no-nav mt-6 pt-4 border-t border-slate-50 flex justify-between items-center cursor-default">
                             <span className="text-xs text-slate-400 font-medium">Due: {task.dueDate
                               ? new Date(task.dueDate).toLocaleDateString('en-US',{
                                 month: 'short', 
@@ -135,7 +164,7 @@ function Tasks() {
                                 year: 'numeric'
                               })
                             : 'No date'}</span>
-                            <input type="checkbox" className="checkbox checkbox-success checkbox-sm rounded-md" checked={task.status === 'completed'} readOnly />
+                            <input type="checkbox" className="checkbox checkbox-success checkbox-sm rounded-md mr-5" checked={task.isComplete} onChange={(e) => handleToggleComplete(e, task._id)}/>
                         </div>
 
                     </div>

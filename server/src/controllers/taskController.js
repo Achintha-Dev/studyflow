@@ -53,11 +53,21 @@ export async function createTask(req, res) {
 
 export async function updateTask(req, res) {
     try {
+
+        const updateData = {};
+
+        if (req.body.priority !== undefined) {
+        updateData.priority = req.body.priority;
+        }
+
+        if (req.body.isComplete !== undefined) {
+        updateData.isComplete = req.body.isComplete;
+        }
         
         const updateTask = await Task.findOneAndUpdate(
             { _id: req.params.id, user: req.user.id },
-            { priority: req.body.priority, isComplete: req.body.isComplete },
-            { returnDocument: 'after' }
+            updateData,
+            { new: true }
         );
 
         if(!updateTask) return res.status(404).json({ message: 'Task not found for update!' });
