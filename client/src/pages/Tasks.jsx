@@ -5,12 +5,15 @@ import axios from 'axios';
 
 import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/AuthContext';
+import Footer from '../components/Footer';
+import AddTask from './AddTask'
 
 import { IoLogOutOutline } from "react-icons/io5";
 import { LuCircleUserRound } from "react-icons/lu";
 import { FiEdit3 } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import Swal from "sweetalert2";
 
 function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -29,23 +32,24 @@ function Tasks() {
   navigate(`/tasks/${id}`);
   };
 
+  const fetchTask = async ()=> {
+    try {
+      const token = JSON.parse(localStorage.getItem('userInfo')).token; 
+      const res = await axios.get('http://localhost:5000/api/tasks', {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      setTasks(res.data);
+      setLoading(false);
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to load tasks!');
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchTask = async ()=> {
-      try {
-        const token = JSON.parse(localStorage.getItem('userInfo')).token; 
-        const res = await axios.get('http://localhost:5000/api/tasks', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        setTasks(res.data);
-        setLoading(false);
-
-      } catch (error) {
-        toast.error(error.response?.data?.message || 'Failed to load tasks!');
-
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTask();
   }, []);
 
@@ -75,9 +79,38 @@ function Tasks() {
 
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to update task!');
-      console.log(error.response?.data?.message || 'Failed to update task!');
-      
     }
+  }
+
+  const handleDeleteTask = async (e ,id) => {
+    e.stopPropagation(); // Prevent card click
+
+    const result = await Swal.fire({
+      title: "Delete Task?",
+      text: "You won't be able to recover this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const token = JSON.parse(localStorage.getItem('userInfo')).token;
+      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      toast.success("Task deleted!");
+
+    // update UI instantly
+    setTasks((prev) => prev.filter((task) => task._id !== id));
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to delete task!');
+    }
+
   }
 
   return (
@@ -118,7 +151,7 @@ function Tasks() {
                 <p className="text-slate-500 mt-1">You have {tasks.length} tasks for today.</p>
             </div>
             {/* create task button */}
-            <button className="btn bg-[#2563eb] hover:bg-blue-700 text-white border-none rounded-xl px-6 shadow-lg shadow-blue-100" onClick={() => navigate("/tasks/new")}>
+            <button className="btn bg-[#2563eb] hover:bg-blue-700 text-white border-none rounded-xl px-6 shadow-lg shadow-blue-100" onClick={() => document.getElementById('add_task_modal').showModal()} >
                 + New Task
             </button>
         </div>
@@ -144,7 +177,7 @@ function Tasks() {
                               <div tabIndex={0} role="button" className="btn btn-ghost btn-sm text-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors m-1"> <HiOutlineDotsHorizontal /> </div>
                               <ul tabIndex={0} className="dropdown-content menu bg-blue-50 rounded-xl z-[1] w-16 p-1.5 shadow-xl border border-slate-100 pt-2">
                                 <li className='tooltip tooltip-right' data-tip="Edit"><Link to={`/tasks/edit/${task._id}`} > <FiEdit3 className='text-green-500 text-lg ' /> </Link></li>
-                                <li className='tooltip tooltip-right' data-tip="Delete"><Link> <MdDeleteOutline className='text-red-500 text-lg ' /> </Link></li>
+                                <li className='tooltip tooltip-right' data-tip="Delete" onClick={(e) => handleDeleteTask(e, task._id)}><MdDeleteOutline className='text-red-500 text-5xl ' /></li>
                               </ul>
                             </div>
 
@@ -172,6 +205,12 @@ function Tasks() {
             </div>
           )}
       </main>
+
+      <AddTask tasks={tasks} setTasks={setTasks} />
+
+      <div className='mt-16'>
+        <Footer/>
+      </div>
 
     </div>
   )
