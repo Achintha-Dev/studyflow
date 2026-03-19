@@ -39,7 +39,15 @@ const EditTask = ({ task, tasks, setTasks }) => {
       });
 
       // Update the specific task in the parent state
-      setTasks(tasks.map(t => t._id === task._id ? res.data.task : t));
+      if (Array.isArray(tasks)) {
+        // For Tasks.jsx (list page)
+        setTasks(tasks.map(t => 
+          t._id === task._id ? res.data.task : t
+        ));
+      } else {
+        // For TaskDetails.jsx (single task page)
+        setTasks(res.data.task);
+      }
       
       toast.success('Task updated successfully!');
       document.getElementById('edit_task_modal').close();
