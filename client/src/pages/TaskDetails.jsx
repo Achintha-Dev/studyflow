@@ -71,11 +71,12 @@ function TaskDetails() {
           <li className='text-red-600 lg:hidden ml-20'><a onClick={logout}>Logout <IoLogOutOutline/> </a></li>
           
           <li>
-            <div className="dropdown dropdown-left dropdown-bottom hidden lg:flex">
-  
-              <div tabIndex={0} role="button" className="avatar cursor-pointer">
-                <div className="w-10 rounded-full ring ring-offset-2 text-neutral-content ">
-                  <span className='text-3xl ml-2.5'>{firstLetter}</span>
+            <div className="dropdown dropdown-left dropdown-bottom hidden lg:flex rounded-full w-14 h-14 items-center justify-center hover:bg-gray-300">
+              <div tabIndex={0} role="button" className="avatar cursor-pointer rounded-full">
+                <div className="avatar placeholder">
+                  <div className="bg-blue-100 text-neutral-content text-lg w-12 rounded-full border-2 border-blue-300">
+                    <span>{firstLetter}</span>
+                  </div>
                 </div>
               </div>
   

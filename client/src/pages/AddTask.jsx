@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const AddTask = ({ tasks, setTasks }) => {
+const AddTask = ({ fetchTasks }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -18,12 +18,12 @@ const AddTask = ({ tasks, setTasks }) => {
     setLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem('userInfo')).token;
-      const res = await axios.post('http://localhost:5000/api/tasks', formData, {
+      await axios.post('http://localhost:5000/api/tasks', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       // Update Parent UI instantly
-      setTasks([...tasks, res.data.task]); 
+      await fetchTasks();
       
       toast.success('Task created successfully!');
       
