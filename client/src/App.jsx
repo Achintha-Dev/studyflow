@@ -8,8 +8,11 @@ import EditTask from "./pages/EditTask";
 import { Toaster } from 'react-hot-toast';
 import Register from "./pages/Register";
 import ProtectRoutes from "./components/ProtectRoutes";
+import NetworkStatus from "./components/NetworkStatus";
 
 function App() {
+
+  NetworkStatus(); // Listen for signal/online changes
 
   return (
     <>
