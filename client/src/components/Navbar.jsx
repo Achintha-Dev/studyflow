@@ -27,11 +27,11 @@ function Navbar(props) {
             {/* --- MOBILE MENU (Dropdown) --- */}
             <div className="flex-none lg:hidden">
                 <div className="dropdown dropdown-end">
-                    <label tabIndex={0} className="btn btn-ghost btn-circle text-slate-900 hover:bg-slate-50">
+                    <span tabIndex={0} className="btn btn-ghost btn-circle text-slate-900 hover:bg-slate-50">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
-                    </label>
+                    </span>
                     {/* 5. Added a deeper shadow and smoother corners to the mobile menu */}
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-4 z-[1] p-3 shadow-2xl bg-white rounded-2xl w-64 border border-slate-100 font-semibold text-slate-700">
                     {props.children}

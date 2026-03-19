@@ -45,20 +45,22 @@ const AddTask = ({ tasks, setTasks }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title Input */}
           <div className="form-control w-full">
-            <label className="label-text font-bold text-slate-600 mb-2">Task Title</label>
+            <label htmlFor='title' className="label-text font-bold text-slate-600 mb-2" id='title-label'>Task Title</label>
             <input 
               type="text" 
               placeholder="e.g. Finish calculus problems" 
               className="input input-bordered w-full rounded-xl bg-slate-50 border-slate-200 focus:outline-blue-500" 
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
+              id='title'
             />
           </div>
 
           {/* Description */}
           <div className="form-control w-full">
-            <label className="label-text font-bold text-slate-600 mb-2">Description</label>
+            <label htmlFor='description' className="label-text font-bold text-slate-600 mb-2" id='description-label'>Description</label>
             <textarea 
+              id='description'
               className="textarea textarea-bordered h-24 rounded-xl bg-slate-50 border-slate-200 focus:outline-blue-500" 
               placeholder="What needs to be done?"
               value={formData.description}
@@ -69,11 +71,12 @@ const AddTask = ({ tasks, setTasks }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Priority */}
             <div className="form-control w-full">
-              <label className="label-text font-bold text-slate-600 mb-2">Priority</label>
+              <label htmlFor='priority' className="label-text font-bold text-slate-600 mb-2" id='priority-label'>Priority</label>
               <select 
                 className="select select-bordered rounded-xl bg-slate-50 border-slate-200"
                 value={formData.priority}
                 onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                id='priority'
               >
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
@@ -83,12 +86,13 @@ const AddTask = ({ tasks, setTasks }) => {
 
             {/* Due Date */}
             <div className="form-control w-full">
-              <label className="label-text font-bold text-slate-600 mb-2">Due Date</label>
+              <label htmlFor='due-date' className="label-text font-bold text-slate-600 mb-2" id='due-date-label'>Due Date</label>
               <input 
                 type="date" 
                 className="input input-bordered rounded-xl bg-slate-50 border-slate-200" 
                 value={formData.dueDate}
                 onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
+                id='due-date'
               />
             </div>
           </div>

@@ -55,6 +55,13 @@ export async function updateTask(req, res) {
     try {
 
         const updateData = {};
+        if (req.body.title !== undefined) {
+        updateData.title = req.body.title;
+        }
+
+        if (req.body.description !== undefined) {
+        updateData.description = req.body.description;
+        }
 
         if (req.body.priority !== undefined) {
         updateData.priority = req.body.priority;
@@ -63,11 +70,15 @@ export async function updateTask(req, res) {
         if (req.body.isComplete !== undefined) {
         updateData.isComplete = req.body.isComplete;
         }
-        
+
+        if (req.body.dueDate !== undefined) {
+        updateData.dueDate = req.body.dueDate;
+        }
+
         const updateTask = await Task.findOneAndUpdate(
             { _id: req.params.id, user: req.user.id },
             updateData,
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         if(!updateTask) return res.status(404).json({ message: 'Task not found for update!' });

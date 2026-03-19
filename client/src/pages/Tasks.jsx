@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/AuthContext';
 import Footer from '../components/Footer';
 import AddTask from './AddTask'
+import EditTask from './EditTask';
 
 import { IoLogOutOutline } from "react-icons/io5";
 import { LuCircleUserRound } from "react-icons/lu";
@@ -113,6 +114,20 @@ function Tasks() {
 
   }
 
+  // edit task - navigate to edit page
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const openEditModal = (e, task) => {
+    e.stopPropagation(); // Stop card click navigation
+    setSelectedTask(task);
+  };
+
+  useEffect(() => {
+    if (selectedTask) {
+      document.getElementById('edit_task_modal').showModal();
+    }
+  }, [selectedTask])
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Nav bar */}
@@ -175,9 +190,9 @@ function Tasks() {
                             {/* edit delete buttons */}
                             <div className="dropdown dropdown-end">
                               <div tabIndex={0} role="button" className="btn btn-ghost btn-sm text-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors m-1"> <HiOutlineDotsHorizontal /> </div>
-                              <ul tabIndex={0} className="dropdown-content menu bg-blue-50 rounded-xl z-[1] w-16 p-1.5 shadow-xl border border-slate-100 pt-2">
-                                <li className='tooltip tooltip-right' data-tip="Edit"><Link to={`/tasks/edit/${task._id}`} > <FiEdit3 className='text-green-500 text-lg ' /> </Link></li>
-                                <li className='tooltip tooltip-right' data-tip="Delete" onClick={(e) => handleDeleteTask(e, task._id)}><MdDeleteOutline className='text-red-500 text-5xl ' /></li>
+                              <ul tabIndex={0} className="dropdown-content menu bg-blue-50 rounded-xl z-[1] w-16 p-1.5 shadow-xl border border-slate-100 pt-1">
+                                <li className='tooltip tooltip-right' data-tip="Edit" onClick={(e) => openEditModal(e, task)}> <FiEdit3 className='text-green-500 text-3xl p-1 ml-3'/> </li>
+                                <li className='tooltip tooltip-right' data-tip="Delete" onClick={(e) => handleDeleteTask(e, task._id)}><MdDeleteOutline className='text-red-500 text-3xl p-1 ml-3' /></li>
                               </ul>
                             </div>
 
@@ -207,6 +222,13 @@ function Tasks() {
       </main>
 
       <AddTask tasks={tasks} setTasks={setTasks} />
+      {selectedTask && (
+        <EditTask
+          task={selectedTask}
+          tasks={tasks}
+          setTasks={setTasks}
+        />
+      )}
 
       <div className='mt-16'>
         <Footer/>
