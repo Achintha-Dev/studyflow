@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate  } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import axios from 'axios';
 
 import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/AuthContext';
 import Footer from '../components/Footer';
 import AddTask from './AddTask'
 import EditTask from './EditTask';
+import API from '../services/Api';
 
 import { IoLogOutOutline } from "react-icons/io5";
 import { LuCircleUserRound } from "react-icons/lu";
@@ -36,7 +36,7 @@ function Tasks() {
   const fetchTask = async ()=> {
     try {
       const token = JSON.parse(localStorage.getItem('userInfo')).token; 
-      const res = await axios.get('http://localhost:5000/api/tasks', {
+      const res = await API.get('/tasks', {
           headers: { Authorization: `Bearer ${token}` }
       });
       setTasks(res.data);
@@ -62,7 +62,7 @@ function Tasks() {
 
       const task = tasks.find(t => t._id === id);
 
-      const res = await axios.put(`http://localhost:5000/api/tasks/${id}`, 
+      const res = await API.put(`/tasks/${id}`, 
         { isComplete: !task.isComplete },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -99,7 +99,7 @@ function Tasks() {
 
     try {
       const token = JSON.parse(localStorage.getItem('userInfo')).token;
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+      await API.delete(`/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

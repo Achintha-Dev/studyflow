@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import { useNavigate , Link } from 'react-router-dom'
+
 import toast from 'react-hot-toast'
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import EyeOffIcon from '../assets/eye-off_icon.svg'
-import { useNavigate , Link } from 'react-router-dom'
+
 import Form from '../components/Form'
+import API from '../services/Api';
 
 function Register() {
     const [formData, setFormData] = useState({name:'', email:'', password:''});
@@ -17,7 +18,7 @@ function Register() {
       setIsError(false);
 
       try {
-        await axios.post('http://localhost:5000/api/auth/register', formData);
+        await API.post('/auth/register', formData);
         toast.success('Registration successful! Please login.');
         navigator('/login');
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../services/Api';
 import toast from 'react-hot-toast';
 
 const EditTask = ({ task, tasks, setTasks }) => {
@@ -34,7 +34,7 @@ const EditTask = ({ task, tasks, setTasks }) => {
     setLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem('userInfo')).token;
-      const res = await axios.put(`http://localhost:5000/api/tasks/${task._id}`, formData, {
+      const res = await API.put(`/tasks/${task._id}`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

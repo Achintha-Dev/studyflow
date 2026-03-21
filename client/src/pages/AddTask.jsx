@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import API from '../services/Api';
 import toast from 'react-hot-toast';
 
 const AddTask = ({ fetchTasks }) => {
@@ -18,7 +18,7 @@ const AddTask = ({ fetchTasks }) => {
     setLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem('userInfo')).token;
-      await axios.post('http://localhost:5000/api/tasks', formData, {
+      await API.post('/tasks', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EditTask from './EditTask';
+import API from '../services/Api';
 
 import { IoChevronBack, IoCalendarOutline, IoFlagOutline } from "react-icons/io5";
 import { FiEdit3 } from "react-icons/fi";
 import { IoLogOutOutline } from "react-icons/io5";
 import { LuCircleUserRound } from "react-icons/lu";
+import toast from 'react-hot-toast';
 
 function TaskDetails() {
   const { user, logout } = useContext(AuthContext);
@@ -38,12 +39,12 @@ function TaskDetails() {
     const fetchTask = async () => {
       try {
         const token = JSON.parse(localStorage.getItem('userInfo')).token;
-        const res = await axios.get(`http://localhost:5000/api/tasks/${id}`, {
+        const res = await API.get(`/tasks/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTask(res.data);
       } catch (error) {
-        console.error(error);
+        toast.error(error.response?.data?.message || 'Failed to load task!');
       } finally {
         setLoading(false);
       }
