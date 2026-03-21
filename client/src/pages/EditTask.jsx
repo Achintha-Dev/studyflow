@@ -103,7 +103,8 @@ const EditTask = ({ task, tasks, setTasks }) => {
               <label htmlFor='due-date' className="label-text font-bold text-slate-600 mb-2" id='due-date-label'>Due Date</label>
               <input 
                 type="date" 
-                className="input input-bordered rounded-xl bg-slate-50" 
+                className="input input-bordered rounded-xl bg-slate-50 accent-blue-600 w-full" 
+                style={{ colorScheme: 'light' }} 
                 value={formData.dueDate}
                 onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
                 id='due-date'
