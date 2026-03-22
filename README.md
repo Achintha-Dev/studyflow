@@ -1,6 +1,7 @@
 # 📚 StudyFlow
 
-A modern MERN stack task management application designed for students to organize, track, and complete their study tasks efficiently.
+StudyFlow is a full-stack task management application built with the MERN stack.  
+It helps students organize, track, and manage their study tasks efficiently with a clean and responsive UI.
 
 ---
 
@@ -131,10 +132,11 @@ If you like this project, give it a ⭐ on GitHub!
 ---
 
 ## Live Demo
-
+Coming soon...
 
 ---
 
 ## Badges
 ![React](https://img.shields.io/badge/Frontend-React-blue)
 ![Node](https://img.shields.io/badge/Backend-Node.js-green)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen)
