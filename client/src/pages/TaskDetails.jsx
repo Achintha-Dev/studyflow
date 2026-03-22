@@ -1,58 +1,28 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EditTask from './EditTask';
-import API from '../services/Api';
+import useTasks from '../hooks/useTasks';
+import useTaskById from '../hooks/useTaskById';
 
 import { IoChevronBack, IoCalendarOutline, IoFlagOutline } from "react-icons/io5";
 import { FiEdit3 } from "react-icons/fi";
 import { IoLogOutOutline } from "react-icons/io5";
 import { LuCircleUserRound } from "react-icons/lu";
-import toast from 'react-hot-toast';
+
 
 function TaskDetails() {
+  const { openEditModal, selectedTask, userInfo } = useTasks();
+  const { task, loading, setTask } = useTaskById();
   const { user, logout } = useContext(AuthContext);
-  const { id } = useParams();
   const navigate = useNavigate();
-  const [task, setTask] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const name = JSON.parse(localStorage.getItem('userInfo'))?.user?.name || user?.name || 'User';
+  
+  const name = userInfo?.user?.name || user?.name || 'User';
   const firstLetter = name.charAt(0).toUpperCase();
 
-  // edit task
-  const [selectedTask, setSelectedTask] = useState(null);
-  
-    const openEditModal = (e, task) => {
-      e.stopPropagation(); // Stop card click navigation
-      setSelectedTask(task);
-    };
-  
-    useEffect(() => {
-      if (selectedTask) {
-        document.getElementById('edit_task_modal').showModal();
-      }
-    }, [selectedTask]);
-
-  useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem('userInfo')).token;
-        const res = await API.get(`/tasks/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setTask(res.data);
-      } catch (error) {
-        toast.error(error.response?.data?.message || 'Failed to load task!');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTask();
-  }, [id]);
-
-  if (loading) {
+  if (loading || task === undefined) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-slate-50">
         <span className="loading loading-spinner loading-lg text-blue-600"></span>
@@ -60,13 +30,13 @@ function TaskDetails() {
     );
   }
 
-  if (!task) return <div className="p-20 text-center">Task not found</div>;
+  if (task === null) return <div className="p-20 text-center">Task not found</div>;
 
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar>
-        <li className='text-blue-700 lg:hidden'><a onClick={logout}> <LuCircleUserRound/>Hi! {JSON.parse(localStorage.getItem('userInfo'))?.user?.name || user?.name}</a></li>
+        <li className='text-blue-700 lg:hidden'><span> <LuCircleUserRound/>Hi! {name}</span></li>
           <li><Link to='/' className="text-gray-600 hover:text-blue-600 font-medium tooltip tooltip-bottom mt-2" data-tip="Go to home">Home</Link></li>
           <li><Link to='/tasks' className="text-gray-600 hover:text-blue-600 font-medium tooltip tooltip-bottom mt-2" data-tip="Go to home">My Tasks</Link></li>
           <li className='text-red-600 lg:hidden ml-20'><a onClick={logout}>Logout <IoLogOutOutline/> </a></li>
@@ -123,7 +93,8 @@ function TaskDetails() {
                   {task.title}
                 </h1>
               </div>
-
+              
+              {/* Edit Task Button */}
               <Link 
                 onClick={(e) => openEditModal(e, task)}
                 className="btn btn-outline border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 rounded-xl"

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import API from "../services/Api";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 const useTasks = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(false);
+    const hasFetched = useRef(false);
 
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     const token = userInfo ? userInfo.token : null;
@@ -13,6 +14,7 @@ const useTasks = () => {
 
     // get all tasks
     const fetchTasks = useCallback(async () => {
+        if (!token) return;
         try {
             setLoading(true);
             const res = await API.get('/tasks',{
@@ -25,10 +27,13 @@ const useTasks = () => {
             setLoading(false);
         }
     }, [token]);
-
+    
     useEffect(() => {
+        if (!token || hasFetched.current) return;
+
+        hasFetched.current = true;
         fetchTasks();
-    }, [fetchTasks]);
+    }, [fetchTasks, token]);
 
 
 
@@ -56,7 +61,7 @@ const useTasks = () => {
         );
 
         } catch (error) {
-        toast.error(error.response?.data?.message || 'Failed to update task!');
+            toast.error(error.response?.data?.message || 'Failed to update task!');
         }
     }
 
@@ -72,7 +77,7 @@ const useTasks = () => {
 
     useEffect(() => {
         if (selectedTask) {
-        document.getElementById('edit_task_modal').showModal();
+            document.getElementById('edit_task_modal').showModal();
         }
     }, [selectedTask]);
 
