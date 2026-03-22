@@ -1,139 +1,43 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { Link, useNavigate  } from 'react-router-dom'
-import toast from 'react-hot-toast'
 
 import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/AuthContext';
 import Footer from '../components/Footer';
 import AddTask from './AddTask'
 import EditTask from './EditTask';
-import API from '../services/Api';
+import useTasks from '../hooks/useTasks';
 
 import { IoLogOutOutline } from "react-icons/io5";
 import { LuCircleUserRound } from "react-icons/lu";
 import { FiEdit3 } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import Swal from "sweetalert2";
+
 
 function Tasks() {
-  const [tasks, setTasks] = useState([]);
+
   const { user, logout } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-  const name = JSON.parse(localStorage.getItem('userInfo'))?.user?.name || user?.name || 'User';
-  const firstLetter = name.charAt(0).toUpperCase();
+  const { tasks, setTasks, loading, fetchTasks, handleToggleComplete, handleDeleteTask, openEditModal, selectedTask, userInfo } = useTasks();
   const navigate = useNavigate();
 
+  const name = userInfo?.user?.name || user?.name || 'User';
+  const firstLetter = name.charAt(0).toUpperCase();
+
   const handleCardClick = (e, id) => {
-  // Prevent navigation if dropdown or checkbox is clicked
-  if (e.target.closest('.dropdown, .no-nav') || e.target.type === 'checkbox') {
-    return;
-  }
-
-  navigate(`/tasks/${id}`);
+    // Prevent navigation if dropdown or checkbox is clicked
+    if (e.target.closest('.dropdown, .no-nav') || e.target.type === 'checkbox') {
+      return;
+    }
+    navigate(`/tasks/${id}`);
   };
-
-  const fetchTask = async ()=> {
-    try {
-      const token = JSON.parse(localStorage.getItem('userInfo')).token; 
-      const res = await API.get('/tasks', {
-          headers: { Authorization: `Bearer ${token}` }
-      });
-      setTasks(res.data);
-      setLoading(false);
-
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to load tasks!');
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTask();
-  }, []);
-
-  // check/uncheck task
-  const handleToggleComplete = async (e, id) => {
-    e.stopPropagation(); // Prevent card click
-    try {
-      const token = JSON.parse(localStorage.getItem('userInfo')).token;
-
-      const task = tasks.find(t => t._id === id);
-
-      const res = await API.put(`/tasks/${id}`, 
-        { isComplete: !task.isComplete },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-
-      toast.success('Task updated!');
-
-      // update UI instantly
-      setTasks((prev) =>
-        prev.map((t) =>
-          t._id === id
-            ? { ...t, isComplete: res.data.task.isComplete }
-            : t
-        )
-      );
-
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update task!');
-    }
-  }
-
-  const handleDeleteTask = async (e ,id) => {
-    e.stopPropagation(); // Prevent card click
-
-    const result = await Swal.fire({
-      title: "Delete Task?",
-      text: "You won't be able to recover this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    });
-
-    if (!result.isConfirmed) return;
-
-    try {
-      const token = JSON.parse(localStorage.getItem('userInfo')).token;
-      await API.delete(`/tasks/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      toast.success("Task deleted!");
-
-    // update UI instantly
-    setTasks((prev) => prev.filter((task) => task._id !== id));
-
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to delete task!');
-    }
-
-  }
-
-  // edit task - navigate to edit page
-  const [selectedTask, setSelectedTask] = useState(null);
-
-  const openEditModal = (e, task) => {
-    e.stopPropagation(); // Stop card click navigation
-    setSelectedTask(task);
-  };
-
-  useEffect(() => {
-    if (selectedTask) {
-      document.getElementById('edit_task_modal').showModal();
-    }
-  }, [selectedTask])
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Nav bar */}
       <Navbar>
         
-        <li className='text-blue-700 lg:hidden'><a onClick={logout}> <LuCircleUserRound/>Hi! {JSON.parse(localStorage.getItem('userInfo'))?.user?.name || user?.name}</a></li>
+        <li className='text-blue-700 lg:hidden'><span> <LuCircleUserRound/>Hi! {name} </span></li>
         <li><Link to='/' className="text-gray-600 hover:text-blue-600 font-medium tooltip tooltip-bottom mt-2" data-tip="Go to home">Home</Link></li>
         <li className='text-red-600 lg:hidden ml-20'><a onClick={logout}>Logout <IoLogOutOutline/> </a></li>
         
@@ -172,57 +76,68 @@ function Tasks() {
             </button>
         </div>
 
+
         {loading ? (
-            <div className="flex justify-center py-20">
-                <span className="loading loading-spinner loading-lg text-blue-600"></span>
-            </div>
+          <div className="flex justify-center py-20">
+            <span className="loading loading-spinner loading-lg text-blue-600"></span>
+          </div>
         ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
-                {tasks.map((task) => (
-                    <div key={task._id} className="bg-blue-100 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={(e) => handleCardClick(e, task._id)}>
-                        <div className="flex justify-between items-start mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+            {tasks.length === 0 ? (
 
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                task.status === 'completed' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600'
-                            }`}>
-                                {task.status}
-                            </span>
+              // no tasks message
+              <div className="col-span-full justify-center text-center py-20 text-gray-400 text-xl">
+                No tasks yet. Click <a onClick={()=> document.getElementById('add_task_modal').showModal()} className="text-blue-500 hover:text-blue-700 cursor-pointer">"New Task"</a>  to create one
+              </div>
 
-                            {/* edit delete buttons */}
-                            <div className="dropdown dropdown-end">
-                              <div tabIndex={0} role="button" className="btn btn-ghost btn-sm text-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors m-1"> <HiOutlineDotsHorizontal /> </div>
-                              <ul tabIndex={0} className="dropdown-content menu bg-blue-50 rounded-xl z-[1] w-16 p-1.5 shadow-xl border border-slate-100 pt-1">
-                                <li className='tooltip tooltip-right' data-tip="Edit" onClick={(e) => openEditModal(e, task)}> <FiEdit3 className='text-green-500 text-3xl p-1 ml-3'/> </li>
-                                <li className='tooltip tooltip-right' data-tip="Delete" onClick={(e) => handleDeleteTask(e, task._id)}><MdDeleteOutline className='text-red-500 text-3xl p-1 ml-3' /></li>
-                              </ul>
-                            </div>
+            ): tasks.map((task) => ( 
 
-                        </div>
+              <div key={task._id} className="bg-blue-100 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={(e) => handleCardClick(e, task._id)}>
 
-                        <h3 className="text-lg font-bold text-slate-800 mb-2">{task.title}</h3>
-                        <p className="text-slate-500 text-sm line-clamp-2">
-                          {task.description.split(" ").slice(0, 5).join(" ")}
-                          {task.description.split(" ").length > 5 ? "..." : ""}
-                        </p>
+                <div className="flex justify-between items-start mb-4">
+                  {/* status badge */}
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                    task.isComplete ? 'bg-green-100 text-green-600' : 'bg-blue-200 text-blue-600'
+                  }`}>
+                    {task.isComplete ? 'Completed' : 'In Progress'}
+                  </span>
 
-                        <div className="no-nav mt-6 pt-4 border-t border-slate-50 flex justify-between items-center cursor-default">
-                            <span className="text-xs text-slate-400 font-medium">Due: {task.dueDate
-                              ? new Date(task.dueDate).toLocaleDateString('en-US',{
-                                month: 'short', 
-                                day: 'numeric', 
-                                year: 'numeric'
-                              })
-                            : 'No date'}</span>
-                            <input type="checkbox" className="checkbox checkbox-success checkbox-sm rounded-md mr-5" checked={task.isComplete} onChange={(e) => handleToggleComplete(e, task._id)}/>
-                        </div>
+                  {/* edit delete buttons */}
+                  <div className="dropdown dropdown-end">
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-sm text-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors m-1"> <HiOutlineDotsHorizontal /> </div>
+                    <ul tabIndex={0} className="dropdown-content menu bg-blue-50 rounded-xl z-[1] w-16 p-1.5 shadow-xl border border-slate-100 pt-1">
+                      <li className='tooltip tooltip-right' data-tip="Edit" onClick={(e) => openEditModal(e, task)}> <FiEdit3 className='text-green-500 text-3xl p-1 ml-3'/> </li>
+                      <li className='tooltip tooltip-right' data-tip="Delete" onClick={(e) => handleDeleteTask(e, task._id)}><MdDeleteOutline className='text-red-500 text-3xl p-1 ml-3' /></li>
+                    </ul>
+                  </div>
+                </div>
 
-                    </div>
-                ))}
-            </div>
-          )}
+                {/* description */}
+                <h3 className="text-lg font-bold text-slate-800 mb-2">{task.title}</h3>
+                <p className="text-slate-500 text-sm line-clamp-2">
+                  {task.description.split(" ").slice(0, 5).join(" ")}
+                  {task.description.split(" ").length > 5 ? "..." : ""}
+                </p>
+
+                {/* due date and completion status */}
+                <div className="no-nav mt-6 pt-4 border-t border-slate-50 flex justify-between items-center cursor-default">
+                  <span className="text-xs text-slate-400 font-medium">Due: {task.dueDate
+                    ? new Date(task.dueDate).toLocaleDateString('en-US',{
+                      month: 'short', 
+                      day: 'numeric', 
+                      year: 'numeric'
+                    })
+                  : 'No date'}</span>
+                  <input type="checkbox" className="checkbox checkbox-success checkbox-sm rounded-md mr-5" checked={task.isComplete} onChange={(e) => handleToggleComplete(e, task._id)}/>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        )}
       </main>
 
-      <AddTask fetchTasks={fetchTask}/>
+      <AddTask fetchTasks={fetchTasks}/>
       {selectedTask && (
         <EditTask
           task={selectedTask}
