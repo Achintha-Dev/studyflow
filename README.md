@@ -91,6 +91,30 @@ npm run dev
 
 ## Screenshots
 
+### Landing
+![Landing Page](./screenshots/landing-page.png)
+
+### Authentication
+![Login Page](./screenshots/login-page.png)
+![Register Page](./screenshots/register-page.png)
+
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
+![Dashboard Mobile View](./screenshots/dashboard-mobile-view.png)
+
+### Task Management
+
+#### Create & Edit
+![Add Task Popup](./screenshots/add-task-popup.png)
+![Edit Task Popup](./screenshots/edit-task-popup.png)
+
+#### Actions
+![Edit Delete Buttons](./screenshots/task-edit-delete-buttons.png)
+![Delete Popup](./screenshots/task-delete-confirmation-popup.png)
+
+#### Details
+![Task Details Page](./screenshots/task-details-page.png)
+
 ---
 
 ## Author
