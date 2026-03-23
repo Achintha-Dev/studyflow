@@ -14,7 +14,10 @@ import router from './routes/tasksRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({origin: '*'})); // use connect to frontend
+app.use(cors({
+    origin: ["http://localhost:5173", "https://your-frontend-url.vercel.app"],
+    credentials: true
+})); // use connect to frontend
 app.use(express.json()); // allow to read json data.
 
 app.use(rateLimiter);
