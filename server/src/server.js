@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://your-frontend-url.vercel.app"],
+    origin: ["http://localhost:5173", "https://studyflow-m6s23xs61-achintha-devs-projects.vercel.app"],
     credentials: true
 })); // use connect to frontend
 app.use(express.json()); // allow to read json data.
