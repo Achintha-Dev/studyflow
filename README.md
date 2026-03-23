@@ -132,7 +132,9 @@ If you like this project, give it a ⭐ on GitHub!
 ---
 
 ## Live Demo
-Coming soon...
+
+- **Frontend:** [https://studyflow-m6s23xs61-achintha-devs-projects.vercel.app](https://studyflow-m6s23xs61-achintha-devs-projects.vercel.app)
+- **Backend API:** [https://studyflow-te8p.onrender.com/api](https://studyflow-te8p.onrender.com/api)
 
 ---
 
